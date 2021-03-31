@@ -2,17 +2,21 @@
 # Python 3.6.8
 
 import requests
+import random
 from bs4 import BeautifulSoup
 from time import sleep
 
-class ImdbScraper:
+class ImdbSearcher:
 	'''Searches Imdb for a specific product'''
 
-	def __init__(self):
+	def __init__(self, keyword):
+		''' The first 'm' in variable names stands for 'movie' '''
 		self.imdb_link = 'https://www.imdb.com'
+		self.keyword = '+'.join(keyword.split())
 
-	def get_mlinks(self, keyword):
-		'''Extracts result links for searched keyword'''
+	def get_mlinks(self, keyword=None):
+		'''Returns result links for searched keyword, as a list'''
+		keyword = self.keyword if keyword is None else keyword  # Assigning keyword correctly
 		self.page = requests.get(f'{self.imdb_link}/find?q={keyword}') # Getting the website url with the movie
 
 		soup = BeautifulSoup(self.page.text, 'lxml') # Parsing the web page to the scraper
@@ -20,23 +24,38 @@ class ImdbScraper:
 		found_movies = soup.find('table', class_='findList') # Finding the movies
 
 		# Getting the links out of the movie table
-		movie_links = [link.find('a').get('href') for link in found_movies.find_all('td', class_='result_text')]
+		mlinks = [link.find('a').get('href') for link in found_movies.find_all('td', class_='result_text')]
 
-		return movie_links
+		return mlinks
 
-		for link in movie_links:
-			movie_page = requests.get(self.imdb_link + link)
-			new_soup = BeautifulSoup(movie_page.text, 'lxml')
-			# print(new_soup.prettify())
-			mname = new_soup.find('h1', class_='').text # The movie name
+	def get_minfo(self, link):
+		movie_page = requests.get(self.imdb_link + link)
+		new_soup = BeautifulSoup(movie_page.text, 'lxml')
+		# print(new_soup.prettify())
+		try:
+			mname = new_soup.find('h1', class_='').text.strip() # The movie name
 			if new_soup.find('span', itemprop='ratingValue'): # Check if the movie is rated
-				print(f"Rating: {new_soup.find('span', itemprop='ratingValue').text}") 
-			print(f"Sumarry: {new_soup.find('div', class_='summary_text').text.strip()}") # Summary
-			print()
-			sleep(2) # To avoid overwhelming the website
+				mrating = new_soup.find('span', itemprop='ratingValue').text.strip()
+			else:
+				mrating = None 
+			msummary = new_soup.find('div', class_='summary_text').text.strip()
 
-		self.search_again = input("That's it. Search again? [Yes/No] ")
+			return (mname, mrating, msummary)
+		except AttributeError as e:
+			print(e)
+			return None
+
+	def get_all(self):
+		for link in self.get_mlinks():
+			try:
+				name, rating, summary = self.get_minfo(link)
+				print(name, rating)
+				print(summary)
+				sleep(random.randint(1, 3)) # To avoid overwhelming the website
+			except TypeError:
+				print("Coundn't extract data")
+				continue
 
 if __name__ =='__main__':
-	scraper = ImdbScraper()
-	scraper.get_results('Game of Thrones')
+	scraper = ImdbSearcher('Game of Thrones')
+	scraper.get_all()
