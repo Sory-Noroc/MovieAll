@@ -17,6 +17,8 @@ class ImdbSearcher:
 	def get_mlinks(self, keyword=None):
 		'''Returns result links for searched keyword, as a list'''
 		keyword = self.keyword if keyword is None else keyword  # Assigning keyword correctly
+		if not isinstance(keyword, str):
+			return []
 		self.page = requests.get(f'{self.imdb_link}/find?q={keyword}') # Getting the website url with the movie
 
 		soup = BeautifulSoup(self.page.text, 'lxml') # Parsing the web page to the scraper
