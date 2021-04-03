@@ -16,13 +16,20 @@ def test_mlinks():
 	assert s.get_minfo(links[0])
 
 def test_req():
-	a = get_tag('a', class_='ipc-list__item nav-link NavLink-sc-19k0khm-0 dvLykY ipc-list__item--indent-one')
-	assert a[1]['href'] == '/chart/top/?ref_=nv_mv_250'
+	testclass = 'ipc-list__item nav-link NavLink-sc-19k0khm-0 dvLykY ipc-list__item--indent-one'
+	a = get_tag('a', class_=testclass)
+	assert a[0]['href'] == 'https://www.imdb.com/calendar/?ref_=nv_mv_cal'
+	assert a[2]['href'] == '/chart/top/?ref_=nv_mv_250'
 	with pytest.raises(ValueError):
 		get_tag(20)
 
 def test_soup():
 	s = get_soup(main_link)
-	assert isinstance(s, str)
-	assert s.startswith('<')
+	assert s
+
+def test_get_link():
+	s = get_soup()
+	tag = s.find('a')
+	assert get_link(tag) == '/?ref_=nv_home'
+	assert get_link(tag, full=True) == 'https://www.imdb.com/?ref_=nv_home'
 
