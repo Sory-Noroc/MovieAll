@@ -34,3 +34,14 @@ def get_tag(tag_name, link='https://www.imdb.com/', class_ = '', *args, **kwargs
 	result = soup.select(f'{tag_name}.{dot_class}')
 
 	return result
+
+def get_movie_info(link=None, soup=None):
+	title = 'title_wrapper'
+	rating = 'ratingValue'
+	summaryCl = 'summary_text'
+	starsCl = 'credit_summary_item'
+
+	if link is not None:
+		soup = get_soup(link)
+	elif soup is not None:
+		pass
