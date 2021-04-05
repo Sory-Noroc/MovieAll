@@ -36,12 +36,17 @@ def get_tag(tag_name, link='https://www.imdb.com/', class_ = '', *args, **kwargs
 	return result
 
 def get_movie_info(link=None, soup=None):
-	title = 'title_wrapper'
-	rating = 'ratingValue'
-	summaryCl = 'summary_text'
-	starsCl = 'credit_summary_item'
+	data_dict = {
+		'title': 'title_wrapper', 
+		'rating': 'ratingValue', 
+		'summary': 'summary_text', 
+		# 'stars': 'credit_summary_item'
+		}
 
 	if link is not None:
 		soup = get_soup(link)
-	elif soup is not None:
-		pass
+
+	for prop in data_dict:
+		data_dict[prop] = soup.select_one(data_dict[prop]).get_text().strip()
+		
+	return data_dict 
