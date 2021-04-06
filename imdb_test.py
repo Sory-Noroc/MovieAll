@@ -33,3 +33,18 @@ def test_get_link():
 	assert get_link(tag) == '/?ref_=nv_home'
 	assert get_link(tag, full=True) == 'https://www.imdb.com/?ref_=nv_home'
 
+def test_get_movie_info():
+	assert get_movie_info(link='https://www.imdb.com/title/tt0111161/?pf_rd_m=A2FGELUUNOQJNL&pf_rd_p=e31d89dd-322d-4646-8962-327b42fe94b1&pf_rd_r=R15M8ZM0CQGWP8JXH701&pf_rd_s=center-1&pf_rd_t=15506&pf_rd_i=top&ref_=chttp_tt_1') == {
+	'title': 'The Shawshank Redemption', 
+	'rating': '9.3', 
+	'summary': 'Two imprisoned men bond over a number of years, finding solace and eventual redemption through acts of common decency.',
+	'year': '1994'
+	}
+
+	link = 'https://www.imdb.com/title/tt0468569/?pf_rd_m=A2FGELUUNOQJNL&pf_rd_p=e31d89dd-322d-4646-8962-327b42fe94b1&pf_rd_r=GATJM3JZ1W297Y3KQ843&pf_rd_s=center-1&pf_rd_t=15506&pf_rd_i=top&ref_=chttp_tt_4'
+	assert get_movie_info(link) == {
+	'title': 'The Dark Knight', 
+	'rating': '9.0', 
+	'summary': 'When the menace known as the Joker wreaks havoc and chaos on the people of Gotham, Batman must accept one of the greatest psychological and physical tests of his ability to fight injustice.',
+	'year': '2008'
+	}
