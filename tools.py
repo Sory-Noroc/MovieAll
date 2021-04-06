@@ -36,10 +36,12 @@ def get_tag(tag_name, link='https://www.imdb.com/', class_ = '', *args, **kwargs
 	return result
 
 def get_movie_info(link=None, soup=None):
+	''' Returns a dictionary with the data about the movie'''
 	data_dict = {
-		'title': 'title_wrapper', 
-		'rating': 'ratingValue', 
-		'summary': 'summary_text', 
+		'title': 'div.title_wrapper > h1', 
+		'rating': 'span[itemprop=ratingValue]', 
+		'summary': 'div.summary_text',
+		'year': '#titleYear a',
 		# 'stars': 'credit_summary_item'
 		}
 
@@ -47,6 +49,6 @@ def get_movie_info(link=None, soup=None):
 		soup = get_soup(link)
 
 	for prop in data_dict:
-		data_dict[prop] = soup.select_one(data_dict[prop]).get_text().strip()
+		data_dict[prop] = soup.select_one(data_dict[prop]).find(text=True, recursive=False).strip('\n  ').replace('\xa0', '')
 		
 	return data_dict 
