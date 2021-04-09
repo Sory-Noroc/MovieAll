@@ -35,20 +35,43 @@ def get_tag(tag_name, link='https://www.imdb.com/', class_ = '', *args, **kwargs
 
 	return result
 
+def get_stars(soup):
+	''' Returns a dictionary of movie stars(actors) from the soup
+	    as keys, and links to their profiles as values'''
+	selector = 'div.credit_summary_item'
+	tags = soup.select(selector)
+
+	for div in tags:  # Making sure we are extracting the stars
+		if div.h4.get_text() == 'Stars:':
+			star_tags = div.select('a')
+
+	star_dict = dict()
+
+	for tag in star_tags[:-1]:  # Ignoring the last lag as it is not a star
+		key = tag.string
+		value = get_link(tag, full=True)  # Getting the full link to the actor
+		star_dict[key] = value
+
+	return star_dict
+
 def get_movie_info(link=None, soup=None):
 	''' Returns a dictionary with the data about the movie'''
+	
 	data_dict = {
 		'title': 'div.title_wrapper > h1', 
 		'rating': 'span[itemprop=ratingValue]', 
 		'summary': 'div.summary_text',
 		'year': '#titleYear a',
-		# 'stars': 'credit_summary_item'
 		}
 
-	if link is not None:
+	if link is not None:  # Explicit
 		soup = get_soup(link)
 
 	for prop in data_dict:
-		data_dict[prop] = soup.select_one(data_dict[prop]).find(text=True, recursive=False).strip('\n  ').replace('\xa0', '')
-		
+		try:
+			data_dict[prop] = soup.select_one(data_dict[prop]).find(text=True, recursive=False).strip('\n  ').replace('\xa0', '')
+		except AttributeError:
+			data_dict[prop] = None
+
+	data_dict['stars'] = get_stars(soup)
 	return data_dict 
