@@ -22,8 +22,8 @@ def get_link(tag, full=False):
 	except AttributeError:
 		raise AttributeError('Provided tag has no href')
 
-def get_tag(tag_name, link='https://www.imdb.com/', class_ = '', *args, **kwargs):
-	''' Returns a bs tag from the specified page with the specified class'''
+def get_tags(tag_name, link='https://www.imdb.com/', class_ = '', *args, **kwargs):
+	''' Returns a list of bs tags from the specified page with the specified class'''
 	if class_:
 		dot_class = '.'.join(class_.split())  # Correct class for css selector
 
@@ -32,8 +32,26 @@ def get_tag(tag_name, link='https://www.imdb.com/', class_ = '', *args, **kwargs
 
 	soup = get_soup()
 	result = soup.select(f'{tag_name}.{dot_class}')
-
 	return result
+
+def search_movies(criteria, kw):
+	''' Advanced search based on the provided criteria and keyword 
+		Returns a list of movie links'''
+	criterias = ('plot', 'quotes', 'trivia', 'goofs', 
+				'crazy_credits', 'location', 'soundtracks', 'versions')
+
+	if not criteria in criterias:
+		raise AttributeError('No such searching criteria')
+
+	base = f'https://www.imdb.com/search/title-text/?{criteria}={kw}'
+
+	# Next we extract the a tags from within h3 tags using tag.a
+	movie_tags = list(map(lambda x: x.a, get_tags('h3', class_='lister-item-header')))
+
+	movie_links = []
+	for tag in movie_tags:
+		movie_links.append(get_link(tag, full=True))
+	return movie_links
 
 def get_stars(soup):
 	''' Returns a dictionary of movie stars(actors) from the soup
@@ -51,7 +69,6 @@ def get_stars(soup):
 		key = tag.string
 		value = get_link(tag, full=True)  # Getting the full link to the actor
 		star_dict[key] = value
-
 	return star_dict
 
 def get_movie_info(link=None, soup=None):
