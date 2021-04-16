@@ -5,27 +5,28 @@ import sys
 
 
 class Ui:
+	''' The GUI that holds all the widgets that the User will interact with '''
 
 	def __init__(self):
+		''' Initializes the GUI and '''
 
 		self.app = QtWidgets.QApplication(sys.argv)
 		self.mw = QtWidgets.QMainWindow()
-
-		self.mw.setObjectName("mw")
 		self.mw.resize(800, 600)
 
 		self.centralwidget = QtWidgets.QWidget(self.mw)
-		self.centralwidget.setObjectName("centralwidget")
 		self.mw.setCentralWidget(self.centralwidget)
 
-		self.menubar = QtWidgets.QMenuBar(self.mw)
-		self.menubar.setGeometry(QtCore.QRect(0, 0, 800, 21))
-		self.menubar.setObjectName("menubar")
+		self.centralframe = QtWidgets.QVBoxLayout()
 
-		self.mw.setMenuBar(self.menubar)
-		self.statusbar = QtWidgets.QStatusBar(self.mw)
-		self.statusbar.setObjectName("statusbar")
-		self.mw.setStatusBar(self.statusbar)
+	def place_frame(self, frame):
+		''' 
+		Places the provided frame on the central window.
+		frame -> QBoxLayout 
+		'''
+		widget = QtWidgets.QWidget()
+		widget.setLayout(frame)
+		self.centralframe.addWidget(widget)
 
 	def run(self):
 		self.mw.show()
