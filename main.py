@@ -15,13 +15,12 @@ class Ui(QtWidgets.QMainWindow):
 		super().__init__()
 		self.resize(width, height)
 
-		self.widgets = QtWidgets
+		self.cw = QtWidgets.QWidget(self)
+		self.setCentralWidget(self.cw)
 
-		self.centralwidget = self.widgets.QWidget(self)
-		self.setCentralWidget(self.centralwidget)
-
-		self.centralframe = self.widgets.QVBoxLayout()
-		self.centralwidget.setLayout(self.centralframe)
+		self.centralframe = QtWidgets.QVBoxLayout()
+		self.cw.setLayout(self.centralframe)
+		self.widgets = dict()  # For the widgets in each frame
 
 	def place_frame(self, frame):
 		''' 
@@ -34,8 +33,24 @@ class Ui(QtWidgets.QMainWindow):
 
 	def create_widgets(self):
 		''' Creates all the widgets needed fot our app '''
+		self.widgets['name'] = QtWidgets.QLabel(self.cw)
+		self.widgets['name'].setText('MoviewAll')
+		self.widgets['name'].setFont(QtGui.QFont('Arial', 20))
+		self.widgets['name'].setAlignment(QtCore.Qt.AlignCenter)
+		self.centralframe.addWidget(self.widgets['name'])
+
+		input_frame = QtWidgets.QHBoxLayout()
+		self.widgets['label'] = QtWidgets.QLabel(self.cw)
+		self.widgets['entry'] = QtWidgets.QLineEdit(self.cw)
+		self.widgets['entry'].setAlignment(QtCore.Qt.AlignCenter)
+		self.widgets['combo'] = QtWidgets.QComboBox(self.cw)
+
+		for w in list(self.widgets.values())[1:]:  # Skipping 'name' as we have already placed it
+			input_frame.addWidget(w)
+		self.place_frame(input_frame)
 
 	def run(self):
+		self.create_widgets()
 		self.show()
 		sys.exit(self.app.exec_())
 
