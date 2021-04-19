@@ -13,6 +13,7 @@ class Ui(QtWidgets.QMainWindow):
 		''' Initializes the GUI and it's properties '''
 
 		super().__init__()
+		self.policy = QtWidgets.QSizePolicy.Ignored
 		self.resize(width, height)
 
 		self.cw = QtWidgets.QWidget(self)
@@ -34,10 +35,12 @@ class Ui(QtWidgets.QMainWindow):
 	def create_widgets(self):
 		''' Creates all the widgets needed fot our app '''
 		self.widgets['name'] = QtWidgets.QLabel(self.cw)
-		self.widgets['name'].setText('MoviewAll')
+		self.centralframe.addWidget(self.widgets['name'])
 		self.widgets['name'].setFont(QtGui.QFont('Arial', 20))
 		self.widgets['name'].setAlignment(QtCore.Qt.AlignCenter)
-		self.centralframe.addWidget(self.widgets['name'])
+		# self.widgets['name'].setSizePolicy(self.policy, self.policy)
+		self.widgets['name'].setText('<font color=blue>MoviewAll</font>')
+		self.widgets['name'].adjustSize()
 
 		input_frame = QtWidgets.QHBoxLayout()
 		self.widgets['label'] = QtWidgets.QLabel(self.cw)
@@ -47,7 +50,6 @@ class Ui(QtWidgets.QMainWindow):
 
 		for w in list(self.widgets.values())[1:]:  # Skipping 'name' as we have already placed it
 			input_frame.addWidget(w)
-		self.place_frame(input_frame)
 
 	def run(self):
 		self.create_widgets()
