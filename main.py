@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from PyQt5 import QtCore, QtGui, QtWidgets
+from tools import *
 import sys
 
 
@@ -54,6 +55,12 @@ class Ui(QtWidgets.QMainWindow):
 
 		self.widgets['list'] = QtWidgets.QListWidget(self.cw)
 		self.centralframe.addWidget(self.widgets['list'])
+
+	def search(self, keyword):
+		''' Gets invoked when the search button gets clicked '''
+		query = self.widgets['entry'].text()
+		self.widgets['entry'].clear()
+		movie_links = search_movies(, query)
 
 	def run(self):
 		self.create_widgets()
