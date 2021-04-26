@@ -1,14 +1,14 @@
 import requests
 from bs4 import BeautifulSoup
 
-def get_soup(link='https://www.imdb.com/'):
+def get_soup(link='https://www.imdb.com/', *args, **kwargs):
 	''' Accesses the input link and returns a soup with the html'''
 	r = requests.get(link)
 	soup = BeautifulSoup(r.text, 'html.parser')
 
 	return soup
 
-def get_link(tag, full=False):
+def get_link(tag, full=False, *args, **kwargs):
 	''' Returns a link extracted from the href of the tag'''
 	main_link = 'https://www.imdb.com/'
 	try:
@@ -34,7 +34,7 @@ def get_tags(tag_name, link='https://www.imdb.com/', class_ = '', *args, **kwarg
 	result = soup.select(f'{tag_name}.{dot_class}')
 	return result
 
-def search_movies(criteria, kw):
+def search_movies(criteria, kw, *args, **kwargs):
 	''' Advanced search based on the provided criteria and keyword 
 		Returns a list of movie links'''
 	criterias = ('plot', 'quotes', 'trivia', 'goofs', 
@@ -46,14 +46,14 @@ def search_movies(criteria, kw):
 	base = f'https://www.imdb.com/search/title-text/?{criteria}={kw}'
 
 	# Next we extract the a tags from within h3 tags using tag.a
-	movie_tags = list(map(lambda x: x.a, get_tags('h3', class_='lister-item-header')))
+	movie_tags = get_tags('h3', link=base, class_='lister-item-header')
 
 	movie_links = []
 	for tag in movie_tags:
-		movie_links.append(get_link(tag, full=True))
+		movie_links.append(get_link(tag.a, full=True))
 	return movie_links
 
-def get_stars(soup):
+def get_stars(soup, *args, **kwargs):
 	''' Returns a dictionary of movie stars(actors) from the soup
 	    as keys, and links to their profiles as values'''
 	selector = 'div.credit_summary_item'
@@ -71,7 +71,7 @@ def get_stars(soup):
 		star_dict[key] = value
 	return star_dict
 
-def get_movie_info(link=None, soup=None):
+def get_movie_info(link=None, soup=None, *args, **kwargs):
 	''' Returns a dictionary with the data about the movie'''
 	
 	data_dict = {
@@ -92,3 +92,4 @@ def get_movie_info(link=None, soup=None):
 
 	data_dict['stars'] = get_stars(soup)
 	return data_dict 
+	

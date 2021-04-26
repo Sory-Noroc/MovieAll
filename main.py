@@ -10,7 +10,7 @@ class Ui(QtWidgets.QMainWindow):
 
 	app = QtWidgets.QApplication(sys.argv)  # Firstly, an Application is needed
 
-	def __init__(self, width=800, height=600):
+	def __init__(self, width=800, height=600, *args, **kwargs):
 		''' Initializes the GUI and it's properties '''
 
 		super().__init__()
@@ -24,7 +24,7 @@ class Ui(QtWidgets.QMainWindow):
 		self.cw.setLayout(self.centralframe)
 		self.widgets = dict()  # For the widgets in each frame
 
-	def place_frame(self, frame):
+	def place_frame(self, frame, *args, **kwargs):
 		''' 
 		Places the provided frame on the central window.
 		frame -> QBoxLayout 
@@ -33,7 +33,7 @@ class Ui(QtWidgets.QMainWindow):
 		widget.setLayout(frame)
 		self.centralframe.addWidget(widget)
 
-	def create_widgets(self):
+	def create_widgets(self, *args, **kwargs):
 		''' Creates all the widgets needed fot our app '''
 
 		self.widgets['name'] = QtWidgets.QLabel(self.cw)
@@ -56,11 +56,11 @@ class Ui(QtWidgets.QMainWindow):
 		self.widgets['list'] = QtWidgets.QListWidget(self.cw)
 		self.centralframe.addWidget(self.widgets['list'])
 
-	def search(self, keyword):
+	def search(self, keyword, *args, **kwargs):
 		''' Gets invoked when the search button gets clicked '''
 		query = self.widgets['entry'].text()
 		self.widgets['entry'].clear()
-		movie_links = search_movies(, query)
+		# movie_links = search_movies(here_goes_criteria_from_checkbox, query)
 
 	def run(self):
 		self.create_widgets()
