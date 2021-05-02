@@ -1,6 +1,16 @@
 import requests
 from bs4 import BeautifulSoup
 
+criterias = {
+	'Plot': 'plot', 
+	'Quotes': 'quotes', 
+	'Trivia': 'trivia', 
+	'Goofs': 'goofs', 
+	'Crazy Credits': 'crazy_credits', 
+	'Filming Locations':'location', 
+	'Soundtracks': 'soundtracks', 
+	'Versions': 'versions' }
+
 def get_soup(link='https://www.imdb.com/', *args, **kwargs):
 	''' Accesses the input link and returns a soup with the html'''
 	r = requests.get(link)
@@ -37,10 +47,8 @@ def get_tags(tag_name, link='https://www.imdb.com/', class_ = '', *args, **kwarg
 def search_movies(criteria, kw, *args, **kwargs):
 	''' Advanced search based on the provided criteria and keyword 
 		Returns a list of movie links'''
-	criterias = ('plot', 'quotes', 'trivia', 'goofs', 
-				'crazy_credits', 'location', 'soundtracks', 'versions')
 
-	if not criteria in criterias:
+	if not criteria in criterias.values():
 		raise AttributeError('No such searching criteria')
 
 	base = f'https://www.imdb.com/search/title-text/?{criteria}={kw}'

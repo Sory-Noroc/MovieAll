@@ -19,6 +19,7 @@ class Ui(QtWidgets.QMainWindow):
 
 		self.cw = QtWidgets.QWidget(self)
 		self.setCentralWidget(self.cw)
+		self.setWindowTitle("MoviewAll")
 
 		self.centralframe = QtWidgets.QVBoxLayout()
 		self.cw.setLayout(self.centralframe)
@@ -48,6 +49,7 @@ class Ui(QtWidgets.QMainWindow):
 		self.widgets['combo'] = QtWidgets.QComboBox(self.cw)
 		self.widgets['entry'].setAlignment(QtCore.Qt.AlignCenter)
 
+		# Placing the widgets
 		for w in list(self.widgets.values())[1:]:  # Skipping 'name' as we have already placed it
 			input_frame.addWidget(w)
 		self.place_frame(input_frame)
@@ -56,13 +58,15 @@ class Ui(QtWidgets.QMainWindow):
 		self.widgets['list'] = QtWidgets.QListWidget(self.cw)
 		self.centralframe.addWidget(self.widgets['list'])
 
+		self.widgets['combo'].addItems(criterias.keys())
+
 	def search(self, keyword, *args, **kwargs):
 		''' Gets invoked when the search button gets clicked '''
 		query = self.widgets['entry'].text()
 		self.widgets['entry'].clear()
 		# movie_links = search_movies(here_goes_criteria_from_checkbox, query)
 
-	def run(self):
+	def run(self, *args, **kwargs):
 		self.create_widgets()
 		self.show()
 		sys.exit(self.app.exec_())
