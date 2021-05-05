@@ -21,7 +21,7 @@ class Ui(QtWidgets.QMainWindow):
 
 		self.cw = QtWidgets.QWidget(self)
 		self.setCentralWidget(self.cw)
-		self.setWindowTitle("MoviewAll")
+		self.setWindowTitle("MovieAll")
 
 		self.centralframe = QtWidgets.QVBoxLayout()
 		self.cw.setLayout(self.centralframe)
@@ -50,13 +50,17 @@ class Ui(QtWidgets.QMainWindow):
 		self.entry = QtWidgets.QLineEdit(self.cw)
 		self.combo = QtWidgets.QComboBox(self.cw)
 		self.entry.setAlignment(QtCore.Qt.AlignCenter)
-		self.submit = QtWidgets.QPushButton(self.cw)
-		self.submit.clicked.connect(self.submit)
+		self.submitb = QtWidgets.QPushButton(self.cw)
+		self.submitb.clicked.connect(self.submit)
+		self.submitb.setText('Submit')
+		self.submitb.setMaximumWidth(200)
 
 		# Placing the widgets
-		for w in list(self.widgets.values())[1:]:  # Skipping 'name' as we have already placed it
-			input_frame.addWidget(w)
+		input_frame.addWidget(self.label)
+		input_frame.addWidget(self.entry)
+		input_frame.addWidget(self.combo)
 		self.place_frame(input_frame)
+		self.centralframe.addWidget(self.submitb, alignment=QtCore.Qt.AlignCenter)
 		self.name.adjustSize()
 
 		self.combo.addItems(criterias.keys())
@@ -67,7 +71,7 @@ class Ui(QtWidgets.QMainWindow):
 		self.entry.clear()
 		# movie_links = search_movies(here_goes_criteria_from_checkbox, query)
 
-	def submit(self):
+	def submit(self, *args, **kwargs):
 		''' Gets activated when the user searches for a movie, saving what was found to the database '''
 		
 		search = self.entry.text()
@@ -79,10 +83,8 @@ class Ui(QtWidgets.QMainWindow):
 			for link in links:
 				# title, rating, summary, year
 				info_dict = get_movie_info(link=link)
-				soup = get_soup(link=link)
-				actor_stars = get_stars(soup)
-				
 				data_found.append(info_dict)
+			print(data_found)
 		
 	def run(self, *args, **kwargs):
 		self.create_widgets()

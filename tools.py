@@ -3,7 +3,7 @@ from bs4 import BeautifulSoup
 
 criterias = {
 	'Plot': 'plot', 
-	'Quotes': 'quotes', 
+	'Quotes': 'quotes',
 	'Trivia': 'trivia', 
 	'Goofs': 'goofs', 
 	'Crazy Credits': 'crazy_credits', 
