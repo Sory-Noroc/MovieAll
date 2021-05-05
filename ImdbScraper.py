@@ -21,7 +21,7 @@ class ImdbSearcher:
 			return []
 		self.page = requests.get(f'{self.imdb_link}/find?q={keyword}') # Getting the website url with the movie
 
-		soup = BeautifulSoup(self.page.text, 'lxml') # Parsing the web page to the scraper
+		soup = BeautifulSoup(self.page.text, 'html.parser') # Parsing the web page to the scraper
 
 		found_movies = soup.find('table', class_='findList') # Finding the movies
 
@@ -32,7 +32,7 @@ class ImdbSearcher:
 
 	def get_minfo(self, link):
 		movie_page = requests.get(self.imdb_link + link)
-		new_soup = BeautifulSoup(movie_page.text, 'lxml')
+		new_soup = BeautifulSoup(movie_page.text, 'html.parser')
 		# print(new_soup.prettify())
 		try:
 			mname = new_soup.find('h1', class_='').text.strip() # The movie name

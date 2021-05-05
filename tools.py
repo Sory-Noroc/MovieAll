@@ -40,7 +40,7 @@ def get_tags(tag_name, link='https://www.imdb.com/', class_ = '', *args, **kwarg
 	if not isinstance(tag_name, str):
 		raise ValueError('Tag name must be str')
 
-	soup = get_soup()
+	soup = get_soup(link=link)
 	result = soup.select(f'{tag_name}.{dot_class}')
 	return result
 
