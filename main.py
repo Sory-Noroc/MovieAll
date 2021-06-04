@@ -49,7 +49,6 @@ class Ui(QtWidgets.QMainWindow):
 		self.label = QtWidgets.QLabel(self.cw)
 		self.entry = QtWidgets.QLineEdit(self.cw)
 		self.combo = QtWidgets.QComboBox(self.cw)
-		self.entry.setAlignment(QtCore.Qt.AlignCenter)
 		self.submitb = QtWidgets.QPushButton(self.cw)
 		self.submitb.clicked.connect(self.submit)
 		self.submitb.setText('Submit')
