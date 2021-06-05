@@ -73,11 +73,14 @@ def get_stars(soup, *args, **kwargs):
 
 	star_dict = dict()
 
-	for tag in star_tags[:-1]:  # Ignoring the last tag as it is not a star
-		key = tag.string
-		value = get_link(tag, full=True)  # Getting the full link to the actor
-		star_dict[key] = value
-	return star_dict
+	try:
+		for tag in star_tags[:-1]:  # Ignoring the last tag as it is not a star
+			key = tag.string
+			value = get_link(tag, full=True)  # Getting the full link to the actor
+			star_dict[key] = value
+		return star_dict
+	except UnboundLocalError:
+		return {'stars': None}
 
 def get_movie_info(link=None, soup=None, *args, **kwargs):
 	''' Returns a dictionary with the data about the movie'''
