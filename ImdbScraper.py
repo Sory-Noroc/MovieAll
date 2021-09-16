@@ -1,13 +1,13 @@
 # ImdbScraper.py
 # Python 3.6.8
 
-import requests
-import random
+import requests, random
 from bs4 import BeautifulSoup
 from time import sleep
 
+
 class ImdbSearcher:
-	'''Searches Imdb for a specific product'''
+	''' Searches Imdb for a specific movie '''
 
 	def __init__(self, keyword):
 		''' The first 'm' in variable names stands for 'movie' '''
@@ -15,7 +15,7 @@ class ImdbSearcher:
 		self.keyword = '+'.join(keyword.split())
 
 	def get_mlinks(self, keyword=None):
-		'''Returns result links for searched keyword, as a list'''
+		''' Returns result links for searched keyword, as a list '''
 		keyword = self.keyword if keyword is None else keyword  # Assigning keyword correctly
 		if not isinstance(keyword, str):
 			return []
@@ -31,9 +31,9 @@ class ImdbSearcher:
 		return mlinks
 
 	def get_minfo(self, link):
+		''' Returns movie name, rating and summary using a request that is parsed and extracted from '''
 		movie_page = requests.get(self.imdb_link + link)
 		new_soup = BeautifulSoup(movie_page.text, 'html.parser')
-		# print(new_soup.prettify())
 		try:
 			mname = new_soup.find('h1', class_='').text.strip() # The movie name
 			if new_soup.find('span', itemprop='ratingValue'): # Check if the movie is rated
@@ -48,6 +48,7 @@ class ImdbSearcher:
 			return None
 
 	def get_all(self):
+		''' Prints to stdout the name, rating and summary of the searched movie '''
 		for link in self.get_mlinks():
 			try:
 				name, rating, summary = self.get_minfo(link)
@@ -59,5 +60,5 @@ class ImdbSearcher:
 				continue
 
 if __name__ =='__main__':
-	scraper = ImdbSearcher('Game of Thrones')
+	scraper = ImdbSearcher('Pride and Prejudice')
 	scraper.get_all()
