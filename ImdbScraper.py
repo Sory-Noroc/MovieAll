@@ -8,10 +8,10 @@ from time import sleep
 
 class ImdbSearcher:
 	''' Searches Imdb for a specific movie '''
+	imdb_link = 'https://www.imdb.com'
 
 	def __init__(self, keyword):
 		''' The first 'm' in variable names stands for 'movie' '''
-		self.imdb_link = 'https://www.imdb.com'
 		self.keyword = '+'.join(keyword.split())
 
 	def get_mlinks(self, keyword=None):
