@@ -1,5 +1,6 @@
 import requests
 from bs4 import BeautifulSoup
+from dataclasses import dataclass
 
 
 class Parser:
@@ -14,6 +15,10 @@ class Parser:
 	'Filming Locations':'location', 
 	'Soundtracks': 'soundtracks', 
 	'Versions': 'versions' }
+
+	def get_link(self, criteria, keyword):
+		''' Returns a link that will incorporate the criteria and the keyword '''
+		return f'https://www.imdb.com/search/title-text/?{criteria}={keyword}'
 	
 	def get_soup(link='https://www.imdb.com/', *args, **kwargs):
 		''' Accesses the input link and returns a soup with the html'''
@@ -41,7 +46,7 @@ class Parser:
 		if not criteria in self.criterias.values():
 			raise AttributeError('No such searching criteria')
 
-		base = f'https://www.imdb.com/search/title-text/?{criteria}={kw}'
+		base = self.get_link(criteria, )
 
 		# Next we extract the a tags from within h3 tags using tag.a
 		movie_tags = get_tags('h3', link=base, class_='lister-item-header')
@@ -77,7 +82,7 @@ class Parser:
 class Adjuster:
 	''' A class that does all sorts of manipulating on strings/links '''
 
-	def get_link(tag, full=False, *args, **kwargs):
+	def extract_link(tag, full=False, *args, **kwargs):
 		''' Returns a link extracted from the href of the tag'''
 		main_link = 'https://www.imdb.com/'
 		try:
@@ -111,3 +116,14 @@ class Adjuster:
 			return star_dict
 		except UnboundLocalError:
 			return {'stars': None}
+
+@dataclass
+class Movie:
+	''' A data class for each extracted movie ''' 
+	title: str
+	rating: float 
+	year: int
+	duration: str
+	pg: int
+	photoLink: str
+	stars: dict
