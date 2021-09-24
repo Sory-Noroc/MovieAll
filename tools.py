@@ -1,7 +1,11 @@
 import requests
 from bs4 import BeautifulSoup
 
-criterias = {
+
+class Parser:
+	''' A class holding all the methods related to the interaction client -> website '''
+
+	criterias = {
 	'Plot': 'plot', 
 	'Quotes': 'quotes',
 	'Trivia': 'trivia', 
@@ -10,10 +14,6 @@ criterias = {
 	'Filming Locations':'location', 
 	'Soundtracks': 'soundtracks', 
 	'Versions': 'versions' }
-
-
-class Parser:
-	''' A class holding all the methods related to the interaction client -> website '''
 	
 	def get_soup(link='https://www.imdb.com/', *args, **kwargs):
 		''' Accesses the input link and returns a soup with the html'''
@@ -38,7 +38,7 @@ class Parser:
 		''' Advanced search based on the provided criteria and keyword 
 			Returns a list of movie links'''
 
-		if not criteria in criterias.values():
+		if not criteria in self.criterias.values():
 			raise AttributeError('No such searching criteria')
 
 		base = f'https://www.imdb.com/search/title-text/?{criteria}={kw}'
