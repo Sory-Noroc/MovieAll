@@ -6,6 +6,8 @@ from dataclasses import dataclass
 class Parser:
 	''' A class holding all the methods related to the interaction client -> website '''
 
+	link = 'https://www.imdb.com/'
+
 	criterias = {
 	'Plot': 'plot', 
 	'Quotes': 'quotes',
@@ -20,14 +22,14 @@ class Parser:
 		''' Returns a link that will incorporate the criteria and the keyword '''
 		return f'https://www.imdb.com/search/title-text/?{criteria}={keyword}'
 	
-	def get_soup(link='https://www.imdb.com/', *args, **kwargs):
+	def get_soup(link=Parser.link, *args, **kwargs):
 		''' Accesses the input link and returns a soup with the html'''
 		r = requests.get(link)
 		soup = BeautifulSoup(r.text, 'html.parser')
 
 		return soup
 
-	def get_tags(tag_name, link='https://www.imdb.com/', class_ = '', *args, **kwargs):
+	def get_tags(tag_name, link=Parser.link, class_ = '', *args, **kwargs):
 		''' Returns a list of bs tags from the specified page with the specified class'''
 		if class_:
 			dot_class = '.'.join(class_.split())  # Correct class for css selector
@@ -46,7 +48,7 @@ class Parser:
 		if not criteria in self.criterias.values():
 			raise AttributeError('No such searching criteria')
 
-		base = self.get_link(criteria, )
+		base = self.get_link(criteria, kw)
 
 		# Next we extract the a tags from within h3 tags using tag.a
 		movie_tags = get_tags('h3', link=base, class_='lister-item-header')
@@ -84,7 +86,7 @@ class Adjuster:
 
 	def extract_link(tag, full=False, *args, **kwargs):
 		''' Returns a link extracted from the href of the tag'''
-		main_link = 'https://www.imdb.com/'
+		main_link = Parser.link
 		try:
 			rel_link = tag['href']
 			if full:  # Full link
