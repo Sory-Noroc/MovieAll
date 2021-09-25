@@ -58,28 +58,6 @@ class Parser:
 			movie_links.append(get_link(tag.a, full=True))
 		return movie_links
 
-	def get_movie_info(link=None, soup=None, *args, **kwargs):
-		''' Returns a dictionary with the data about the movie'''
-		
-		data_dict = {
-			'title': 'div.title_wrapper > h1', 
-			'rating': 'span[itemprop=ratingValue]', 
-			'summary': 'div.summary_text',
-			'year': '#titleYear a',
-			}
-
-		if link is not None:  # Explicit
-			soup = get_soup(link)
-
-		for prop in data_dict:
-			try:
-				data_dict[prop] = soup.select_one(data_dict[prop]).find(text=True, recursive=False).strip('\n  ').replace('\xa0', '')
-			except AttributeError:
-				data_dict[prop] = None
-
-		data_dict['stars'] = get_stars(soup)
-		return data_dict 
-
 
 class Adjuster:
 	''' A class that does all sorts of manipulating on strings/links '''
@@ -119,13 +97,39 @@ class Adjuster:
 		except UnboundLocalError:
 			return {'stars': None}
 
+class Extracter:
+	''' The class that extracts the data we need about each movie '''
+
+	data_dict = {
+		'title': 'div.title_wrapper > h1', 
+		'rating': 'span[itemprop=ratingValue]', 
+		'summary': 'div.summary_text',
+		'year': '#titleYear a',
+		}
+
+	def get_movie_info(soup, *args, **kwargs):
+		''' Returns a dictionary with the data about the movie'''
+
+		for prop in self.data_dict:
+			try:
+				data_dict[prop] = soup.select_one(data_dict[prop]).find(text=True, recursive=False).strip('\n  ').replace('\xa0', '')
+			except AttributeError:
+				print("Wrong soup or no data")
+				data_dict[prop] = None
+
+		data_dict['stars'] = Adjuster.get_stars(soup)
+		return data_dict 
+
 @dataclass
 class Movie:
 	''' A data class for each extracted movie ''' 
 	title: str
 	rating: float 
+	summary: str
 	year: int
+	#
 	duration: str
 	pg: int
 	photoLink: str
+	#
 	stars: dict
